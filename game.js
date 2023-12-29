@@ -51,6 +51,7 @@ export default class Game {
   checkWin() {
     if (!this.foundWord.letters.includes('*')) {
       print("Congratulations, you barely survived this time \n" + this.foundWord.asString)
+      this.File.createFile(this.user.userName, this.score)
     } else {
       this.guessWord()
       this.score = `win with the score : ${Number(this.score) - 10}`;

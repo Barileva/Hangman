@@ -12,6 +12,8 @@ export default class Game {
   secretWord
   foundWord
   gallows
+  user
+  score = 100
 
   constructor() {
     print("Welcome to a simple game of hangman. You are doomed!")
@@ -19,40 +21,29 @@ export default class Game {
   }
 
   runRound() {
-    // create a new gallows
     this.gallows = new Gallows()
-    // 10. ask for secret word                         bass
+    this.File = new File()
     let question = new Question("Type the secret word, don't show your opponent: ")
     this.secretWord = new SecretWord(question.answer)
     print("The secret word has " + this.secretWord.length + " letters")
-    // process secret word into chars                  b a s s
-    // store found word as empty positions for chars   _ _ _ _
     this.foundWord = new FoundWord(this.secretWord)
+    const getUserName = new Question("Please enter your name : ")
+    this.user = new User(getUserName.answer)
     print(this.foundWord.asString)
-    // 20. ask for letter ? 
     this.guessWord()
-    // loose round
-    // win round
-    // goto 10
-    // this.runRound()
+
   }
 
   guessWord() {
     let letter = new Question("Guess a letter: ").answer
     print("You guessed " + letter)
-    // find if the letter is in the secret word
     if (this.secretWord.isLetterInSecretWord(letter)) {
-      //  (b)  found            store  x in used chars,  b _ _ _
-      //  (s)  found            store  s in used chars,  b _ s s 
       let positions = this.secretWord.getLetterPositions(letter)
       this.foundWord.applyFoundLetter(letter, positions)
       print("You found \n" + this.foundWord.asString)
-      // check if word i complete (no empty slots)? exit to win round
       this.checkWin()
     } else {
-      //  (x)  not found        store  x in used chars, add part to gallows
       print(this.gallows.step())
-      // check if gallows is done? exit to loose round
       this.checkLoose()
     }
   }
@@ -61,16 +52,18 @@ export default class Game {
     if (!this.foundWord.letters.includes('*')) {
       print("Congratulations, you barely survived this time \n" + this.foundWord.asString)
     } else {
-      // goto 20
       this.guessWord()
+      this.score = `win with the score : ${Number(this.score) - 10}`;
+      return this.score
     }
   }
 
   checkLoose() {
     if (this.gallows.stages.length == 0) {
       print("Wonderful, you got to hang! \n" + "The word was " + this.secretWord.asString)
+      this.score = "Lost score is 0";
+      this.File.createFile(this.user.userName, this.score)
     } else {
-      // goto 20
       this.guessWord()
     }
   }

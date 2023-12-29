@@ -2,6 +2,8 @@ import SecretWord from "./secret-word.js"
 import Question from "./question.js"
 import FoundWord from "./found-word.js"
 import Gallows from "./gallows.js"
+import User from "./user.js"
+import File from "./file.js"
 
 const print = console.log
 
